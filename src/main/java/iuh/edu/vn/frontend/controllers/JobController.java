@@ -45,14 +45,25 @@ public class JobController {
     @GetMapping("/jobs")
     public String showJobListPaging(Model model,
                                     @RequestParam("page") Optional<Integer> page,
-                                    @RequestParam("size") Optional<Integer> size) {
+                                    @RequestParam("size") Optional<Integer> size,
+                                    @RequestParam(value = "searchTerm", required = false) String searchTerm,
+                                    @RequestParam(value = "searchCriteria", required = false) String searchCriteria) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Job> jobPage = jobService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
-        int currentPageGroup = (currentPage - 1) / 10;
+        Page<Job> jobPage;
 
-        model.addAttribute("currentPageGroup", currentPageGroup);
+        if (searchTerm != null && searchCriteria != null) {
+            jobPage = jobService.searchJobs(searchTerm.trim(), searchCriteria, currentPage - 1, pageSize);
+        } else {
+            jobPage = jobService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
+        }
+
+        int currentPageGroup = (currentPage - 1) / 10;
         model.addAttribute("jobs", jobPage);
+        model.addAttribute("currentPageGroup", currentPageGroup);
+        model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("searchCriteria", searchCriteria);
+
         int totalPages = jobPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)

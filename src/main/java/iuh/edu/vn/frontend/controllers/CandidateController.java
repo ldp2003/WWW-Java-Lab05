@@ -51,15 +51,24 @@ public class CandidateController {
     @GetMapping("/listPaging")
     public String showCandidateListPaging(Model model,
                                           @RequestParam("page") Optional<Integer> page,
-                                          @RequestParam("size") Optional<Integer> size) {
+                                          @RequestParam("size") Optional<Integer> size,
+                                          @RequestParam(value = "searchTerm", required = false) String searchTerm,
+                                          @RequestParam(value = "searchCriteria", required = false) String searchCriteria) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Candidate> candidatePage= candidateService.findAllPaging(currentPage - 1,pageSize,"id","asc");
+        Page<Candidate> candidatePage;
+
+        if (searchTerm != null && searchCriteria != null) {
+            candidatePage = candidateService.searchCandidates(searchTerm.trim(), searchCriteria, currentPage - 1, pageSize);
+        } else {
+            candidatePage = candidateService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
+        }
         int currentPageGroup = (currentPage - 1) / 10;
 
         model.addAttribute("candidates", candidatePage);
         model.addAttribute("currentPageGroup", currentPageGroup);
-
+        model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("searchCriteria", searchCriteria);
         int totalPages = candidatePage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)

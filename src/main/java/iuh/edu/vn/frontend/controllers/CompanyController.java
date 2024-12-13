@@ -30,16 +30,27 @@ public class CompanyController {
     AddressService addressService;
 
     @GetMapping("/companies")
-    public String showJobListPaging(Model model,
-                                    @RequestParam("page") Optional<Integer> page,
-                                    @RequestParam("size") Optional<Integer> size) {
+    public String showCompanyListPaging(Model model,
+                                        @RequestParam("page") Optional<Integer> page,
+                                        @RequestParam("size") Optional<Integer> size,
+                                        @RequestParam(value = "searchTerm", required = false) String searchTerm,
+                                        @RequestParam(value = "searchCriteria", required = false) String searchCriteria) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Company> companyPage = companyService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
-        int currentPageGroup = (currentPage - 1) / 10;
+        Page<Company> companyPage;
 
-        model.addAttribute("currentPageGroup", currentPageGroup);
+        if (searchTerm != null && searchCriteria != null) {
+            companyPage = companyService.searchCompanies(searchTerm.trim(), searchCriteria, currentPage - 1, pageSize);
+        } else {
+            companyPage = companyService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
+        }
+
+        int currentPageGroup = (currentPage - 1) / 10;
         model.addAttribute("companies", companyPage);
+        model.addAttribute("currentPageGroup", currentPageGroup);
+        model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("searchCriteria", searchCriteria);
+
         int totalPages = companyPage.getTotalPages();
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)

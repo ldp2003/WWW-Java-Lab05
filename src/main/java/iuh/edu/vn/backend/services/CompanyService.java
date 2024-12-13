@@ -37,4 +37,17 @@ public class CompanyService {
         return companyRepository.findById(id).orElse(null);
     }
 
+    public Page<Company> searchCompanies(String searchTerm, String searchCriteria, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        switch (searchCriteria) {
+            case "name":
+                return companyRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+            case "email":
+                return companyRepository.findByEmailContainingIgnoreCase(searchTerm, pageable);
+            case "phone":
+                return companyRepository.findByPhoneNumberContaining(searchTerm, pageable);
+            default:
+                return Page.empty();
+        }
+    }
 }

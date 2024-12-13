@@ -52,6 +52,19 @@ public class CandidateService {
         return new PageImpl<>(pagedCandidates, pageable, matchingCandidates.size());
     }
 
+    public Page<Candidate> searchCandidates(String searchTerm, String searchCriteria, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        switch (searchCriteria) {
+            case "phone":
+                return candidateRepository.findByPhoneNumberContaining(searchTerm, pageable);
+            case "email":
+                return candidateRepository.findByEmailContainingIgnoreCase(searchTerm, pageable);
+            case "name":
+            default:
+                return candidateRepository.findByNameContainingIgnoreCase(searchTerm, pageable);
+        }
+    }
+
     public Page<Skill> suggestSkillsById(Long id, int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         List<SkillDTO> skills = candidateRepository.findSuggestedSkillsForCandidate(id);

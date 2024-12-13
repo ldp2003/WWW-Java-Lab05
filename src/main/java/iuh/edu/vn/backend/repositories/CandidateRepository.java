@@ -2,6 +2,8 @@ package iuh.edu.vn.backend.repositories;
 
 import iuh.edu.vn.backend.dto.SkillDTO;
 import iuh.edu.vn.backend.models.Candidate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -26,5 +28,12 @@ public interface CandidateRepository extends CrudRepository<Candidate, Long>, Pa
             "ORDER BY COUNT(js.id) DESC")
     List<SkillDTO> findSuggestedSkillsForCandidate(@Param("candidateId") Long candidateId);
 
+    @Query("SELECT c FROM Candidate c WHERE LOWER(c.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Candidate> findByNameContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
 
+    @Query("SELECT c FROM Candidate c WHERE c.phone LIKE CONCAT('%', :searchTerm, '%')")
+    Page<Candidate> findByPhoneNumberContaining(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    @Query("SELECT c FROM Candidate c WHERE LOWER(c.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Candidate> findByEmailContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

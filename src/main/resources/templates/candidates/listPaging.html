@@ -59,6 +59,13 @@
         .btn-container {
             margin-bottom: 15px;
         }
+
+        .input-group .form-select {
+            width: 1%;
+        }
+        .input-group .form-control {
+            width: 60%;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +85,19 @@
     <div class="text-end mb-3">
         <a href="/addCandidate" class="btn btn-success">Add a New Candidate</a>
     </div>
+
+    <form action="/listPaging" method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="searchTerm" class="form-control" placeholder="Search..." th:value="${searchTerm}">
+            <select name="searchCriteria" class="form-select">
+                <option value="name" th:selected="${searchCriteria == 'name'}">Name</option>
+                <option value="phone" th:selected="${searchCriteria == 'phone'}">Phone Number</option>
+                <option value="email" th:selected="${searchCriteria == 'email'}">Email</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/listPaging" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
 
     <div class="table-container">
         <table class="table table-striped">
@@ -120,30 +140,30 @@
         <ul class="pagination">
             <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
                 <a class="page-link"
-                   th:href="@{/listPaging(size=${candidates.size}, page=1)}">&laquo; First</a>
+                   th:href="@{/listPaging(size=${candidates.size}, page=1, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}">&laquo; First</a>
             </li>
 
             <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
                 <a class="page-link"
-                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup - 1) * 10 + 1})}">&lsaquo; Previous 10</a>
+                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup - 1) * 10 + 1}, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}">&lsaquo; Previous 10</a>
             </li>
 
             <li th:each="pageNumber : ${#numbers.sequence(currentPageGroup * 10 + 1, currentPageGroup * 10 + 10)}"
                 th:if="${pageNumber <= candidates.totalPages}"
                 class="page-item" th:classappend="${pageNumber == candidates.number + 1} ? 'active'">
                 <a class="page-link"
-                   th:href="@{/listPaging(size=${candidates.size}, page=${pageNumber})}"
+                   th:href="@{/listPaging(size=${candidates.size}, page=${pageNumber}, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}"
                    th:text="${pageNumber}"></a>
             </li>
 
             <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < candidates.totalPages} ? '' : 'disabled'">
                 <a class="page-link"
-                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup + 1) * 10 + 1})}">Next 10 &rsaquo;</a>
+                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup + 1) * 10 + 1}, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}">Next 10 &rsaquo;</a>
             </li>
 
             <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < candidates.totalPages} ? '' : 'disabled'">
                 <a class="page-link"
-                   th:href="@{/listPaging(size=${candidates.size}, page=${candidates.totalPages})}">Last &raquo;</a>
+                   th:href="@{/listPaging(size=${candidates.size}, page=${candidates.totalPages}, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}">Last &raquo;</a>
             </li>
         </ul>
 
@@ -151,7 +171,7 @@
             <label for="pageSelect">Go to page:</label>
             <select id="pageSelect" class="form-select" onchange="window.location.href=this.value">
                 <option th:each="i : ${#numbers.sequence(1, candidates.totalPages)}"
-                        th:value="@{/listPaging(size=${candidates.size}, page=${i})}"
+                        th:value="@{/listPaging(size=${candidates.size}, page=${i}, searchTerm=${searchTerm}, searchCriteria=${searchCriteria})}"
                         th:text="${i}"
                         th:selected="${i == candidates.number + 1}"></option>
             </select>

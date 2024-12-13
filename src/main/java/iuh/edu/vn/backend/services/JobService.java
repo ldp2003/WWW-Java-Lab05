@@ -88,4 +88,16 @@ public class JobService {
 
         return new PageImpl<>(pagedJobs, pageable, matchingJobs.size());
     }
+
+    public Page<Job> searchJobs(String searchTerm, String searchCriteria, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        switch (searchCriteria) {
+            case "keyword":
+                return jobRepository.findByKeywordContainingIgnoreCase(searchTerm, pageable);
+            case "company":
+                return jobRepository.findByCompanyContainingIgnoreCase(searchTerm, pageable);
+            default:
+                return Page.empty();
+        }
+    }
 }

@@ -21,6 +21,9 @@ public interface JobRepository extends CrudRepository<Job, Long>, PagingAndSorti
             "ORDER BY COUNT(js.id) DESC")
     List<Job> findMatchingJobs(@Param("candidateId") Long candidateId);
 
-    @Query("SELECT j FROM Job j JOIN j.jobSkills js WHERE js.skill.id = :skillId")
-    List<Job> findBySkillId(Long skillId);
+    @Query("SELECT j FROM Job j WHERE LOWER(j.jobName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(j.jobDesc) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Job> findByKeywordContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
+
+    @Query("SELECT j FROM Job j WHERE LOWER(j.company.compName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    Page<Job> findByCompanyContainingIgnoreCase(@Param("searchTerm") String searchTerm, Pageable pageable);
 }
