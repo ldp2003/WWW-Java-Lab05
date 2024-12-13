@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,13 +124,20 @@ public class JobController {
     }
 
     @PostMapping("/seeJobDetail/{jobId}/apply/{candidateId}")
-    public String applyForJob(@PathVariable Long jobId, @PathVariable Long candidateId, Model model) {
+    public String applyForJob(@PathVariable Long jobId, @PathVariable Long candidateId, Model model, RedirectAttributes redirectAttributes) {
         Candidate candidate = candidateService.findById(candidateId);
         Job job = jobService.findById(jobId);
-        emailService.sendApplicationEmail(candidate, job);
-        model.addAttribute("successMessage", "Email sent successfully!");
+        try {
+            emailService.sendApplicationEmail(candidate, job);
+            redirectAttributes.addFlashAttribute("message", "Email sent successfully!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("message", "Failed to send email: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+        }
 
-        return "redirect:/jobs";
+
+        return "redirect:/seeJobDetail/{jobId}";
     }
 
     @GetMapping("/editJob/{id}")

@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface JobRepository extends CrudRepository<Job, Long>, PagingAndSortingRepository<Job, Long>{
-    List<Job> findAll();
 
     @Query("SELECT j FROM Job j JOIN j.jobSkills js JOIN CandidateSkill cs ON js.skill.id = cs.skill.id " +
             "WHERE cs.candidate.id = :candidateId AND cs.skillLevel >= js.skillLevel " +

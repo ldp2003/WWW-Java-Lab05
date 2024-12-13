@@ -110,7 +110,6 @@
                 <th>Phone</th>
                 <th>Email</th>
                 <th>Edit</th>
-                <th>Delete</th>
                 <th>Detail</th>
                 <th>Suggest Jobs</th>
             </tr>
@@ -128,7 +127,6 @@
                 <td th:text="${candidate.phone}"></td>
                 <td th:text="${candidate.email}"></td>
                 <td><a th:href="@{/editCandidate/{id}(id=${candidate.id})}" class="btn btn-warning btn-sm">Edit</a></td>
-                <td><a th:href="@{/delete/{id}(id=${candidate.id})}" class="btn btn-danger btn-sm">Delete</a></td>
                 <td><a th:href="@{/candidateDetail/{id}(id=${candidate.id})}" class="btn btn-info btn-sm">Detail</a></td>
                 <td><a th:href="@{/suggestJobs/{id}(id=${candidate.id})}" class="btn btn-primary btn-sm">Suggest</a></td>
             </tr>

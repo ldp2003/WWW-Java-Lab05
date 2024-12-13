@@ -16,8 +16,7 @@
     <style>
         .form-container {
             border: 1px solid #ddd;
-            padding: 20px;
-            padding-bottom: 40px;
+            padding: 20px 20px 40px;
             border-radius: 8px;
             background-color: #f9f9f9;
         }
@@ -41,9 +40,37 @@
         .edit-btn a {
             text-decoration: none;
         }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const applyForms = document.querySelectorAll('form');
+            applyForms.forEach(form => {
+                form.addEventListener('submit', function (event) {
+                    const overlay = document.getElementById('loadingOverlay');
+                    overlay.style.display = 'flex';
+                });
+            });
+        });
+    </script>
 </head>
 <body>
+<div id="loadingOverlay" class="overlay">
+    Đang gửi...
+</div>
 <div class="container py-4">
     <div class="btn-container">
         <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
@@ -53,6 +80,11 @@
             <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
             <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
         </div>
+    </div>
+
+    <div th:if="${message}" class="alert alert-dismissible" th:classappend="${messageType == 'success'} ? 'alert-success' : 'alert-danger'">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <span th:text="${message}"></span>
     </div>
 
     <div class="edit-btn">

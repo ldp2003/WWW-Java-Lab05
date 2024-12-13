@@ -43,7 +43,7 @@ public class CandidateController {
 
 
     @GetMapping("/candidates")
-    public String showCandidateList(Model model){
+    public String showCandidateList(Model model) {
         model.addAttribute("candidates", candidateRepository.findAll());
         return "candidates/candidates";
     }
@@ -80,7 +80,7 @@ public class CandidateController {
     }
 
     @GetMapping("/addCandidate")
-    public String addCandidateForm(Model model){
+    public String addCandidateForm(Model model) {
         model.addAttribute("candidate", new Candidate());
         model.addAttribute("address", new Address());
         model.addAttribute("skills", skillRepository.findAll());
@@ -90,7 +90,7 @@ public class CandidateController {
     }
 
     @PostMapping("/addCandidate")
-    public String addCandidate(@ModelAttribute Candidate candidate){
+    public String addCandidate(@ModelAttribute Candidate candidate) {
         candidate.getCandidateSkills().removeIf(candidateSkill -> candidateSkill.getSkill().getId() == null);
         addressService.add(candidate.getAddress());
         candidateService.add(candidate);
@@ -108,7 +108,7 @@ public class CandidateController {
     }
 
     @GetMapping("/editCandidate/{id}")
-    public String editCandidateForm(@PathVariable("id") Long id, Model model){
+    public String editCandidateForm(@PathVariable("id") Long id, Model model) {
         Candidate candidate = candidateService.findById(id);
         model.addAttribute("candidateEditing", candidate);
         model.addAttribute("addressEditing", candidate.getAddress());
@@ -119,7 +119,7 @@ public class CandidateController {
     }
 
     @PostMapping("/editCandidate/{id}")
-    public String editCandidate(@PathVariable("id") Long id, @ModelAttribute Candidate candidate){
+    public String editCandidate(@PathVariable("id") Long id, @ModelAttribute Candidate candidate) {
         List<CandidateSkill> originalSkills = candidateSkillRepository.findByCandidateId(id);
         List<CandidateSkill> skillsToDelete = new ArrayList<>(originalSkills);
         candidate.getCandidateSkills().removeIf(candidateSkill -> candidateSkill.getSkill().getId() == null);
@@ -151,41 +151,43 @@ public class CandidateController {
 //    }
 
     @GetMapping("/candidateDetail/{id}")
-    public String showCandidateDetail(@PathVariable("id") Long id, Model model){
+    public String showCandidateDetail(@PathVariable("id") Long id, Model model) {
         Candidate candidate = candidateService.findById(id);
         model.addAttribute("candidateDetail", candidate);
         return "candidates/candidateDetail";
     }
-@GetMapping("/suggestJobs/{id}")
-public String suggestJobForCandidate(@PathVariable("id") Long id,
-                                     @RequestParam("page") Optional<Integer> page,
-                                     @RequestParam("size") Optional<Integer> size,
-                                     Model model) {
-    int currentPage = page.orElse(1);
-    int pageSize = size.orElse(10);
-    Candidate candidate = candidateService.findById(id);
-    Page<Job> jobPage = jobService.findMatchingJobsPaging(candidate, currentPage - 1, pageSize);
 
-    model.addAttribute("candidateSuggesting", candidate);
-    model.addAttribute("jobsSuggesting", jobPage);
+    @GetMapping("/suggestJobs/{id}")
+    public String suggestJobForCandidate(@PathVariable("id") Long id,
+                                         @RequestParam("page") Optional<Integer> page,
+                                         @RequestParam("size") Optional<Integer> size,
+                                         Model model) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+        Candidate candidate = candidateService.findById(id);
+        Page<Job> jobPage = jobService.findMatchingJobsPaging(candidate, currentPage - 1, pageSize);
 
-    int totalPages = jobPage.getTotalPages();
-    if (totalPages > 0) {
-        List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                .boxed()
-                .collect(Collectors.toList());
-        model.addAttribute("pageNumbers", pageNumbers);
+        model.addAttribute("candidateSuggesting", candidate);
+        model.addAttribute("jobsSuggesting", jobPage);
+
+        int totalPages = jobPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
+        return "candidates/suggestJobForCandidate";
     }
 
-    return "candidates/suggestJobForCandidate";
-}
     @GetMapping("/suggestSkills/{id}")
     public String suggestSkills(@PathVariable("id") Long id, Model model,
                                 @RequestParam("page") Optional<Integer> page,
                                 @RequestParam("size") Optional<Integer> size) {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
-        Page<Skill> skillPage = candidateService.suggestSkillsById(id,currentPage - 1,pageSize);
+        Page<Skill> skillPage = candidateService.suggestSkillsById(id, currentPage - 1, pageSize);
         int currentPageGroup = (currentPage - 1) / 10;
         Candidate candidate = candidateService.findById(id);
         model.addAttribute("candidateDetail", candidate);

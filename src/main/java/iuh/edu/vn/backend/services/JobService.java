@@ -44,14 +44,6 @@ public class JobService {
         return jobRepository.findAll(pageable);//findFirst.../findTop...
     }
 
-    public List<Job> findMatchingJobs(Candidate candidate) {
-        return jobRepository.findAll().stream()
-                .filter(job -> job.getJobSkills().stream()
-                        .allMatch(jobSkill -> candidate.getCandidateSkills().stream()
-                                .anyMatch(candidateSkill -> candidateSkill.getSkill().getId().equals(jobSkill.getSkill().getId()) &&
-                                        candidateSkill.getSkillLevel().getValue() >= jobSkill.getSkillLevel().getValue())))
-                .collect(Collectors.toList());
-    }
 
     //    public Page<Job> findMatchingJobsPaging(Candidate candidate, int pageNo, int pageSize) {
 //        Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -95,9 +87,8 @@ public class JobService {
             case "keyword":
                 return jobRepository.findByKeywordContainingIgnoreCase(searchTerm, pageable);
             case "company":
-                return jobRepository.findByCompanyContainingIgnoreCase(searchTerm, pageable);
             default:
-                return Page.empty();
+                return jobRepository.findByCompanyContainingIgnoreCase(searchTerm, pageable);
         }
     }
 }

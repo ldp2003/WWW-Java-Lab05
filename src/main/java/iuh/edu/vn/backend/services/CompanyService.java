@@ -45,9 +45,8 @@ public class CompanyService {
             case "email":
                 return companyRepository.findByEmailContainingIgnoreCase(searchTerm, pageable);
             case "phone":
-                return companyRepository.findByPhoneNumberContaining(searchTerm, pageable);
             default:
-                return Page.empty();
+                return companyRepository.findByPhoneNumberContaining(searchTerm, pageable);
         }
     }
 }
