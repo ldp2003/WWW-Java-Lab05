@@ -15,4 +15,13 @@ public enum SkillLevel {
     public int getValue() {
         return value;
     }
+
+    public static SkillLevel fromValue(int value) {
+        for (SkillLevel level : values()) {
+            if (level.value == value) {
+                return level;
+            }
+        }
+        throw new IllegalArgumentException("Invalid skill level value: " + value);
+    }
 }

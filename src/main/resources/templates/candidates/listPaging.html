@@ -21,25 +21,39 @@
             background-color: #f9f9f9;
         }
 
-        div.inline {
-            color: black;
-            float: left;
-            margin: 20px 5px 5px;
-            text-decoration: none;
-            display: inline-block;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
         }
-
-        div.inline a {
-            text-decoration: none;
+        .pagination .page-item {
+            margin: 0 5px;
         }
-
-        div.inline a.active {
-            color: white;
-            padding: 10px;
-            padding-bottom: 3px;
-            background-color: #92c8ff;
-            border: 1px solid #1a5db9;
+        .pagination .page-item .page-link {
+            padding: 8px 12px;
             border-radius: 5px;
+        }
+        .pagination .active .page-link {
+            background-color: #1a5db9;
+            color: white;
+        }
+        .dropdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+        .dropdown-container label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-right: 10px;
+        }
+        .dropdown-container .form-select {
+            width: auto;
+            padding: 8px 30px 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
 
         .btn-container {
@@ -69,7 +83,7 @@
         <table class="table table-striped">
             <thead class="table-dark">
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Name</th>
                 <th>Date of Birth</th>
                 <th>Address</th>
@@ -82,8 +96,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="candidate : ${candidates}">
-                <td th:text="${candidate.id}"></td>
+            <tr th:each="candidate, iterStat : ${candidates}">
+                <td th:text="${(candidates.number * candidates.size) + iterStat.index + 1}"></td>
                 <td th:text="${candidate.fullName}"></td>
                 <td th:text="${candidate.dob}"></td>
                 <td>
@@ -102,11 +116,47 @@
         </table>
     </div>
 
-    <div class="inline" th:if="${candidates.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
-        <a th:href="@{/listPaging(size=${candidates.size}, page=${pageNumber})}"
-           th:text="${pageNumber}"
-           th:class="${pageNumber==candidates.number + 1} ? active"></a>
-    </div>
+    <nav th:if="${candidates.totalPages > 1}" aria-label="Pagination">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/listPaging(size=${candidates.size}, page=1)}">&laquo; First</a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup - 1) * 10 + 1})}">&lsaquo; Previous 10</a>
+            </li>
+
+            <li th:each="pageNumber : ${#numbers.sequence(currentPageGroup * 10 + 1, currentPageGroup * 10 + 10)}"
+                th:if="${pageNumber <= candidates.totalPages}"
+                class="page-item" th:classappend="${pageNumber == candidates.number + 1} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/listPaging(size=${candidates.size}, page=${pageNumber})}"
+                   th:text="${pageNumber}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < candidates.totalPages} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/listPaging(size=${candidates.size}, page=${(currentPageGroup + 1) * 10 + 1})}">Next 10 &rsaquo;</a>
+            </li>
+
+            <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < candidates.totalPages} ? '' : 'disabled'">
+                <a class="page-link"
+                   th:href="@{/listPaging(size=${candidates.size}, page=${candidates.totalPages})}">Last &raquo;</a>
+            </li>
+        </ul>
+
+        <div class="dropdown-container">
+            <label for="pageSelect">Go to page:</label>
+            <select id="pageSelect" class="form-select" onchange="window.location.href=this.value">
+                <option th:each="i : ${#numbers.sequence(1, candidates.totalPages)}"
+                        th:value="@{/listPaging(size=${candidates.size}, page=${i})}"
+                        th:text="${i}"
+                        th:selected="${i == candidates.number + 1}"></option>
+            </select>
+        </div>
+    </nav>
 
     <br/>
 </div>

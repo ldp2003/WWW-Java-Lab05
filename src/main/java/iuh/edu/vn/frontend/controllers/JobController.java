@@ -49,6 +49,9 @@ public class JobController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
         Page<Job> jobPage = jobService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
+        int currentPageGroup = (currentPage - 1) / 10;
+
+        model.addAttribute("currentPageGroup", currentPageGroup);
         model.addAttribute("jobs", jobPage);
         int totalPages = jobPage.getTotalPages();
         if (totalPages > 0) {
@@ -149,4 +152,5 @@ public class JobController {
         jobSkillRepository.saveAll(job.getJobSkills());
         return "redirect:/jobs";
     }
+
 }

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suggested Skills</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .btn-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .skills-table {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .skills-table th, .skills-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .skills-table th {
+            background-color: #f2f2f2;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .pagination .page-item {
+            margin: 0 5px;
+        }
+        .pagination .page-item .page-link {
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+        .pagination .active .page-link {
+            background-color: #1a5db9;
+            color: white;
+        }
+        .dropdown-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+        .dropdown-container label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-right: 10px;
+        }
+        .dropdown-container .form-select {
+            width: auto;
+            padding: 8px 30px 8px 12px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="btn-container">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
+        <div>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/'">Main Menu</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/jobs'">Jobs</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
+        </div>
+    </div>
+
+    <h2>Suggested Skills</h2>
+
+    <table class="skills-table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Skill Name</th>
+            <th>Skill Type</th>
+            <th>Description</th>
+            <th>Job Postings</th>
+            <th>Average Skill Level</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="skill, iterStat  : ${suggestedSkills}">
+            <td th:text="${(suggestedSkills.number * suggestedSkills.size) + iterStat.index + 1}"></td>
+            <td th:text="${skill.skillName}"></td>
+            <td th:text="${skill.skillType}"></td>
+            <td th:text="${skill.skillDescription}"></td>
+            <td th:each="skilldto : ${skillDTO}" th:if="${skill.id == skilldto.id}" th:text="${skilldto.getJobPostings()}"></td>
+            <td th:each="skilldto : ${skillDTO}" th:if="${skill.id == skilldto.id}" th:text="${skilldto.getAverageSkillLevel()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<nav th:if="${suggestedSkills.totalPages > 1}" aria-label="Pagination">
+    <ul class="pagination">
+        <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=1)}">&laquo; First</a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPageGroup > 0} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=${(currentPageGroup - 1) * 10 + 1})}">&lsaquo; Previous 10</a>
+        </li>
+
+        <li th:each="pageNumber : ${#numbers.sequence(currentPageGroup * 10 + 1, currentPageGroup * 10 + 10)}"
+            th:if="${pageNumber <= suggestedSkills.totalPages}"
+            class="page-item" th:classappend="${pageNumber == suggestedSkills.number + 1} ? 'active'">
+            <a class="page-link"
+               th:href="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=${pageNumber})}"
+               th:text="${pageNumber}"></a>
+        </li>
+
+        <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < suggestedSkills.totalPages} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=${(currentPageGroup + 1) * 10 + 1})}">Next 10 &rsaquo;</a>
+        </li>
+
+        <li class="page-item" th:classappend="${(currentPageGroup + 1) * 10 < suggestedSkills.totalPages} ? '' : 'disabled'">
+            <a class="page-link"
+               th:href="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=${suggestedSkills.totalPages})}">Last &raquo;</a>
+        </li>
+    </ul>
+
+    <div class="dropdown-container">
+        <label for="pageSelect">Go to page:</label>
+        <select id="pageSelect" class="form-select" onchange="window.location.href=this.value">
+            <option th:each="i : ${#numbers.sequence(1, suggestedSkills.totalPages)}"
+                    th:value="@{/suggestSkills/{id}(id=${candidateDetail.id},size=${suggestedSkills.size}, page=${i})}"
+                    th:text="${i}"
+                    th:selected="${i == suggestedSkills.number + 1}"></option>
+        </select>
+    </div>
+</nav>
+
+</body>
+</html>

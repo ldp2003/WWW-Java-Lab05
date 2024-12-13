@@ -36,6 +36,9 @@ public class CompanyController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
         Page<Company> companyPage = companyService.findAllPaging(currentPage - 1, pageSize, "id", "asc");
+        int currentPageGroup = (currentPage - 1) / 10;
+
+        model.addAttribute("currentPageGroup", currentPageGroup);
         model.addAttribute("companies", companyPage);
         int totalPages = companyPage.getTotalPages();
         if (totalPages > 0) {

@@ -55,9 +55,10 @@ public class CandidateController {
         int currentPage = page.orElse(1);
         int pageSize = size.orElse(10);
         Page<Candidate> candidatePage= candidateService.findAllPaging(currentPage - 1,pageSize,"id","asc");
-
+        int currentPageGroup = (currentPage - 1) / 10;
 
         model.addAttribute("candidates", candidatePage);
+        model.addAttribute("currentPageGroup", currentPageGroup);
 
         int totalPages = candidatePage.getTotalPages();
         if (totalPages > 0) {
@@ -169,4 +170,29 @@ public String suggestJobForCandidate(@PathVariable("id") Long id,
 
     return "candidates/suggestJobForCandidate";
 }
+    @GetMapping("/suggestSkills/{id}")
+    public String suggestSkills(@PathVariable("id") Long id, Model model,
+                                @RequestParam("page") Optional<Integer> page,
+                                @RequestParam("size") Optional<Integer> size) {
+        int currentPage = page.orElse(1);
+        int pageSize = size.orElse(10);
+        Page<Skill> skillPage = candidateService.suggestSkillsById(id,currentPage - 1,pageSize);
+        int currentPageGroup = (currentPage - 1) / 10;
+        Candidate candidate = candidateService.findById(id);
+        model.addAttribute("candidateDetail", candidate);
+        model.addAttribute("suggestedSkills", skillPage);
+        model.addAttribute("currentPageGroup", currentPageGroup);
+        model.addAttribute("skillDTO", candidateRepository.findSuggestedSkillsForCandidate(id));
+
+
+        int totalPages = skillPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+        return "candidates/suggestSkills";
+    }
+
 }

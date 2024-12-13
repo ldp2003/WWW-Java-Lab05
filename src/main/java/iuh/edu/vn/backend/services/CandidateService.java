@@ -1,12 +1,16 @@
 package iuh.edu.vn.backend.services;
 
+import iuh.edu.vn.backend.dto.SkillDTO;
 import iuh.edu.vn.backend.models.Candidate;
 import iuh.edu.vn.backend.models.Job;
+import iuh.edu.vn.backend.models.Skill;
 import iuh.edu.vn.backend.repositories.CandidateRepository;
+import iuh.edu.vn.backend.repositories.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +19,9 @@ public class CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
+    @Autowired
+    private SkillRepository skillRepository;
+
     public Page<Candidate> findAllPaging(int pageNo, int pageSize, String sortBy, String sortDirection) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
@@ -43,5 +50,21 @@ public class CandidateService {
         List<Candidate> pagedCandidates = matchingCandidates.subList(start, end);
 
         return new PageImpl<>(pagedCandidates, pageable, matchingCandidates.size());
+    }
+
+    public Page<Skill> suggestSkillsById(Long id, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        List<SkillDTO> skills = candidateRepository.findSuggestedSkillsForCandidate(id);
+
+        List<Skill> suggestSkills = new ArrayList<>();
+        for(SkillDTO skill : skills){
+            Optional<Skill> skillOptional = skillRepository.findById(skill.getId());
+            skillOptional.ifPresent(suggestSkills::add);
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), suggestSkills.size());
+        List<Skill> pagedSkills = suggestSkills.subList(start, end);
+        return new PageImpl<>(pagedSkills, pageable, suggestSkills.size());
     }
 }

@@ -20,4 +20,7 @@ public interface JobRepository extends CrudRepository<Job, Long>, PagingAndSorti
             "HAVING COUNT(js.id) > 0 " +
             "ORDER BY COUNT(js.id) DESC")
     List<Job> findMatchingJobs(@Param("candidateId") Long candidateId);
+
+    @Query("SELECT j FROM Job j JOIN j.jobSkills js WHERE js.skill.id = :skillId")
+    List<Job> findBySkillId(Long skillId);
 }

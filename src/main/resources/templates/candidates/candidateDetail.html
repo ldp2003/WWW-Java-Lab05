@@ -73,7 +73,9 @@
             <p><strong>Phone:</strong> <span th:text="${candidateDetail.phone}"></span></p>
             <p><strong>Email:</strong> <span th:text="${candidateDetail.email}"></span></p>
         </div>
-
+        <div class="edit-btn">
+            <a th:href="@{/suggestSkills/{id}(id=${candidateDetail.id})}" class="btn btn-info">Suggest Skills</a>
+        </div>
         <h3>Skills</h3>
         <table class="table table-hover">
             <thead class="table-light">
