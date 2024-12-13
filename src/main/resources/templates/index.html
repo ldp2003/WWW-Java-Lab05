@@ -2,51 +2,124 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Main Menu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Main Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(to bottom right, #4facfe, #00f2fe);
+            color: #fff;
             font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .container {
-            max-width: 600px;
-            margin-top: 50px;
-        }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 30px;
+            max-width: 900px;
+            margin: auto;
             text-align: center;
         }
-        .btn {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #004085;
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            color: #333;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            height: 300px;
+        }
+
+        .menu-item h3 {
+            font-size: 1.8rem;
+            color: #007bff;
+            height:80px;
+        }
+
+        .menu-item p {
+            flex-grow: 1;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .menu-item button {
+            background: #007bff;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .menu-item button:hover {
+            background: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px 0;
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Welcome to the Main Menu</h1>
-    <button type="button" class="btn btn-primary" onclick="window.location.href='/listPaging'">Show All Candidates</button>
-    <button type="button" class="btn btn-primary" onclick="window.location.href='/jobs'">Show All Jobs</button>
-    <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Show All Companies</button>
+    <h1>Welcome to the Management System</h1>
+    <div class="menu-grid">
+        <div class="menu-item">
+            <h3>Manage Candidates</h3>
+            <p>View and manage all candidates applying for jobs in your company.</p>
+            <button onclick="window.location.href='/listPaging'">View Candidates</button>
+        </div>
+        <div class="menu-item">
+            <h3>Manage Jobs</h3>
+            <p>Post new job openings and manage existing job listings with ease.</p>
+            <button onclick="window.location.href='/jobs'">View Jobs</button>
+        </div>
+        <div class="menu-item">
+            <h3>Manage Companies</h3>
+            <p>Access and update information about all the companies in the system.</p>
+            <button onclick="window.location.href='/companies'">View Companies</button>
+        </div>
+    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<footer>
+    <p>&copy; 2024 My Company | <a href="/">About Us</a> | <a href="/">Contact</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 </body>
 </html>
