@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List Candidates</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .table-container {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        div.inline {
+            color: black;
+            float: left;
+            margin: 20px 5px 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        div.inline a {
+            text-decoration: none;
+        }
+
+        div.inline a.active {
+            color: white;
+            padding: 10px;
+            padding-bottom: 3px;
+            background-color: #92c8ff;
+            border: 1px solid #1a5db9;
+            border-radius: 5px;
+        }
+
+        .btn-container {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="btn-container d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
+        <div>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/'">Main Menu</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/jobs'">Jobs</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
+        </div>
+    </div>
+
+    <h1 class="text-center mb-4">List of Candidates</h1>
+
+    <div class="text-end mb-3">
+        <a href="/addCandidate" class="btn btn-success">Add a New Candidate</a>
+    </div>
+
+    <div class="table-container">
+        <table class="table table-striped">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Detail</th>
+                <th>Suggest Jobs</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="candidate : ${candidates}">
+                <td th:text="${candidate.id}"></td>
+                <td th:text="${candidate.fullName}"></td>
+                <td th:text="${candidate.dob}"></td>
+                <td>
+                    <span th:text="${candidate.address.street}"></span>,
+                    <span th:text="${candidate.address.city}"></span>,
+                    <span th:text="${candidate.address.country.name}"></span>
+                </td>
+                <td th:text="${candidate.phone}"></td>
+                <td th:text="${candidate.email}"></td>
+                <td><a th:href="@{/editCandidate/{id}(id=${candidate.id})}" class="btn btn-warning btn-sm">Edit</a></td>
+                <td><a th:href="@{/delete/{id}(id=${candidate.id})}" class="btn btn-danger btn-sm">Delete</a></td>
+                <td><a th:href="@{/candidateDetail/{id}(id=${candidate.id})}" class="btn btn-info btn-sm">Detail</a></td>
+                <td><a th:href="@{/suggestJobs/{id}(id=${candidate.id})}" class="btn btn-primary btn-sm">Suggest</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="inline" th:if="${candidates.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+        <a th:href="@{/listPaging(size=${candidates.size}, page=${pageNumber})}"
+           th:text="${pageNumber}"
+           th:class="${pageNumber==candidates.number + 1} ? active"></a>
+    </div>
+
+    <br/>
+</div>
+</body>
+</html>

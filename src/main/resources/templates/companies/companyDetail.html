@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Detail</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .form-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h2, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .btn-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .detail-section p {
+            margin: 5px 0;
+        }
+        .edit-btn {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .edit-btn a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="btn-container">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
+        <div>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/'">Main Menu</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/jobs'">Jobs</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
+        </div>
+    </div>
+
+    <div class="edit-btn">
+        <a th:href="@{/editCompany/{id}(id=${company.id})}" class="btn btn-warning">Edit Company</a>
+    </div>
+
+    <div class="form-container">
+        <h2>Company Detail</h2>
+        <div class="detail-section">
+            <p><strong>Name:</strong> <span th:text="${company.compName}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${company.email}"></span></p>
+            <p><strong>Phone:</strong> <span th:text="${company.phone}"></span></p>
+            <p><strong>Address:</strong>
+                <span th:text="${company.address.street}"></span>,
+                <span th:text="${company.address.city}"></span>,
+                <span th:text="${company.address.country.name}"></span>,
+                <span th:text="${company.address.number}"></span>,
+                <span th:text="${company.address.zipcode}"></span>
+            </p>
+            <p><strong>About us:</strong> <span th:text="${company.about}"></span></p>
+            <p><strong>Visit our page:</strong> <a th:href="${company.webUrl}" th:text="${company.webUrl}"></a></p>
+        </div>
+
+        <h3>Jobs we are hiring</h3>
+        <table class="table table-hover">
+            <thead class="table-light">
+            <tr>
+                <th>Job Name</th>
+                <th>Job Description</th>
+                <th>Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="job : ${company.jobs}">
+                <td th:text="${job.jobName}"></td>
+                <td th:text="${job.jobDesc}"></td>
+                <td><a th:href="@{/seeJobDetail/{id}(id=${job.id})}" class="btn btn-info btn-sm">See detail</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

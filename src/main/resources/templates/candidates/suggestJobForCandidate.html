@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Suggest Job for Candidate</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .form-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            padding-bottom: 40px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        div.inline {
+            color: black;
+            float: left;
+            margin: 5px 5px 5px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        div.inline a {
+            text-decoration: none;
+        }
+        div.inline a.active {
+            color: white;
+            padding: 10px;
+            padding-bottom: 3px;
+            background-color: #92c8ff;
+            border: 1px solid #1a5db9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="btn-container d-flex justify-content-between mb-3">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
+        <div>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/'">Main Menu</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/jobs'">Jobs</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
+        </div>
+    </div>
+
+    <h1 class="text-center mb-4">Suggest Job for Candidate</h1>
+
+    <div class="form-container">
+        <h2>Candidate Detail</h2>
+        <div>
+            <p><strong>Full Name:</strong> <span th:text="${candidateSuggesting.fullName}"></span></p>
+            <p><strong>Date of Birth:</strong> <span th:text="${candidateSuggesting.dob}"></span></p>
+            <p><strong>Address:</strong>
+                <span th:text="${candidateSuggesting.address.street}"></span>,
+                <span th:text="${candidateSuggesting.address.city}"></span>,
+                <span th:text="${candidateSuggesting.address.country.name}"></span>,
+                <span th:text="${candidateSuggesting.address.number}"></span>,
+                <span th:text="${candidateSuggesting.address.zipcode}"></span>
+            </p>
+            <p><strong>Phone:</strong> <span th:text="${candidateSuggesting.phone}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${candidateSuggesting.email}"></span></p>
+        </div>
+
+        <h2>Your Skills</h2>
+        <div th:switch="${candidateSuggesting.candidateSkills}">
+            <h2 th:case="null">No skill yet!</h2>
+            <div th:case="*">
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Skill Name</th>
+                            <th>Skill Level</th>
+                            <th>More Infos</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="skill : ${candidateSuggesting.candidateSkills}">
+                            <td th:text="${skill.skill.skillName}"></td>
+                            <td th:text="${skill.skillLevel}"></td>
+                            <td th:text="${skill.moreInfos}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <h2>Jobs Suggesting:</h2>
+        <div th:switch="${jobsSuggesting}">
+            <h2 th:case="null">No jobs yet!</h2>
+            <div th:case="*">
+                <p>We found <span th:text="${jobsSuggesting.totalElements}"></span> jobs you can apply</p>
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>Job Name</th>
+                            <th>Job Description</th>
+                            <th>Company</th>
+                            <th>Detail</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="job : ${jobsSuggesting}">
+                            <td th:text="${job.jobName}"></td>
+                            <td th:text="${job.jobDesc}"></td>
+                            <td th:text="${job.company.compName}"></td>
+                            <td><a th:href="@{/seeJobDetail/{id}(id=${job.id})}" style="text-decoration: none">See detail</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="inline" th:if="${jobsSuggesting.totalPages > 0}" th:each="pageNumber : ${pageNumbers}">
+                    <a th:href="@{/suggestJobs/{id}(id=${candidateSuggesting.id}, size=${jobsSuggesting.size}, page=${pageNumber})}"
+                       th:text="${pageNumber}"
+                       th:class="${pageNumber==jobsSuggesting.number + 1} ? 'active'"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

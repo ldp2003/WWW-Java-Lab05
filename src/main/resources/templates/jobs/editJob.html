@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Job</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous">
+    <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .form-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <div class="mb-3 d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back()">&larr; Back</button>
+        <div>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/'">Main Menu</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/jobs'">Jobs</button>
+            <button type="button" class="btn btn-primary me-2" onclick="window.location.href='/listPaging'">Candidates</button>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='/companies'">Companies</button>
+        </div>
+    </div>
+
+    <h1 class="text-center mb-4">Edit Job</h1>
+
+    <form th:action="@{|/editJob/${jobEditing.id}|}" th:object="${jobEditing}" method="post" class="form-container">
+        <div class="row mb-3">
+            <label for="jobName" class="col-sm-2 col-form-label">Job Title:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="jobName" th:field="*{jobName}" required>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="jobDesc" class="col-sm-2 col-form-label">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="jobDesc" th:field="*{jobDesc}" required></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="company" class="col-sm-2 col-form-label">Company:</label>
+            <div class="col-sm-10">
+                <select class="form-select" id="company" th:field="*{company.id}" required>
+                    <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.id} + '. ' + ${company.compName}"></option>
+                </select>
+            </div>
+        </div>
+
+        <fieldset class="border p-3 mb-3">
+            <legend class="float-none w-auto px-2">Skills Requiring</legend>
+            <div id="skillsContainer">
+                <div th:each="i : ${#numbers.sequence(0, 4)}" class="row mb-3">
+                    <div class="col-md-4">
+                        <select class="form-select skill-select" id="skillSelect-${i}" th:field="*{jobSkills[__${i}__].skill.id}">
+                            <option value="">--Choose a skill--</option>
+                            <option th:each="availableSkill : ${skills}" th:value="${availableSkill.id}" th:text="${availableSkill.id} + '. ' +${availableSkill.skillName}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select" th:field="*{jobSkills[__${i}__].skillLevel}">
+                            <option value="" disabled selected>Skill Level</option>
+                            <option th:each="level : ${T(iuh.edu.vn.backend.enums.SkillLevel).values()}" th:value="${level}" th:text="${level}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" th:field="*{jobSkills[__${i}__].moreInfos}" placeholder="More Infos">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const skillsContainer = document.getElementById('skillsContainer');
+        const submitButton = document.querySelector('button[type="submit"]');
+        let selectedSkills = [];
+
+        function updateSkillOptions() {
+            const allSkillSelects = document.querySelectorAll('.skill-select');
+            selectedSkills = Array.from(allSkillSelects).map(select => select.value).filter(value => value);
+
+            allSkillSelects.forEach(select => {
+                const currentValue = select.value;
+                const options = select.querySelectorAll('option');
+
+                options.forEach(option => {
+                    if (selectedSkills.includes(option.value) && option.value !== currentValue) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
+                });
+            });
+
+            submitButton.disabled = selectedSkills.length === 0;
+        }
+
+        const allSkillSelects = document.querySelectorAll('.skill-select');
+        allSkillSelects.forEach(select => {
+            select.addEventListener('change', function () {
+                updateSkillOptions();
+            });
+        });
+
+        updateSkillOptions();
+    });
+</script>
+</body>
+</html>
