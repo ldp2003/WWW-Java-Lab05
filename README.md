@@ -30,4 +30,43 @@ CareerConnect được phát triển nhằm mang đến một giải pháp toàn
    - Hỗ trợ tìm kiếm dữ liệu liên quan đến công việc, ứng viên hoặc công ty dựa trên nhiều tiêu chí.
 ## Giao diện website
 ### Trang chủ:
-
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/home.png)
+### Giao diện quản lý ứng viên
+#### Giao diện danh sách ứng viên
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c1.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c2.png)
+#### Giao diện thông tin chi tiết ứng viên
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c3.png)
+#### Giao diện thêm mới ứng viên
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c4.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c5.png)
+#### Giao diện cập nhật ứng viên
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c6.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c7.png)
+#### Giao diện đề xuất công việc phù hợp với năng lực ứng viên
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c8.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c9.png)
+#### Giao diện đề xuất kỹ năng ứng viên nên học
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/c10.png)
+### Giao diện quản lý công ty
+#### Giao diện danh sách công ty
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/cp1.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/cp2.png)
+#### Giao diện thông tin chi tiết công ty
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/cp3.png)
+#### Giao diện thêm mới công ty
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/cp4.png)
+#### Giao diện cập nhật thông tin công ty
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/cp5.png)
+### Giao diện quản lý công việc
+#### Giao diện danh sách công việc
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/j1.png)
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/j2.png)
+#### Giao diện thêm mới công việc
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/j3.png)
+#### Giao diện cập nhật công việc
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/j4.png)
+#### Giao diện thông tin chi tiết công việc
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/j5.png)
+### Email ứng viên nhận được khi được apply
+![Alt text](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/image/email.png)
