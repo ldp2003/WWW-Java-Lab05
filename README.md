@@ -5,8 +5,8 @@
 - MSSV: 21032441
 - GVHD: Võ Văn Hải
 ## Tài Liệu:
-- Word: https://github.com/ldp2003/WWW-Java-Lab05/blob/main/Documents/week_05_LeDaiPhat_21032441_BaoCaoDeTai.docx
-- PPT: https://github.com/ldp2003/WWW-Java-Lab05/blob/main/Documents/week_05_LeDaiPhat_21032441_BaoCaoDeTai.pptx
+- Word: [week_05_LeDaiPhat_21032441_BaoCaoDeTai.docs](https://github.com/ldp2003/WWW-Java-Lab05/blob/2964b3c8ade60b9e9487934d3bbc54dddd7411f5/Documents/week_05_LeDaiPhat_21032441_BaoCaoDeTai.docx)
+- PPT: [week_05_LeDaiPhat_21032441_BaoCaoDeTai.pptx](https://github.com/ldp2003/WWW-Java-Lab05/blob/main/Documents/week_05_LeDaiPhat_21032441_BaoCaoDeTai.pptx)
 ## Giới thiệu: 
 CareerConnect được phát triển nhằm mang đến một giải pháp toàn diện cho việc tổ chức và quản lý ứng viên, công việc và thông tin công ty một cách hiệu quả. Nền tảng này không chỉ hỗ trợ nhà tuyển dụng trong việc tìm kiếm và lựa chọn ứng viên phù hợp cho các vị trí đang tuyển dụng, mà còn tạo cơ hội cho ứng viên kết nối và tìm kiếm công việc lý tưởng.
 ## Các chức năng chính: 
